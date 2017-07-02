@@ -43,7 +43,6 @@ class WebcamThread(threading.Thread):
 def get_frame(threadName):
     while not done:
         _, frame = cap.read()
-        A[0] = frame
         output_frame.frame = frame
 
 class PredictorThread(threading.Thread):
@@ -69,9 +68,6 @@ def predict(threadName):
         classes = detection_graph.get_tensor_by_name('detection_classes:0')
         num_detections = detection_graph.get_tensor_by_name('num_detections:0')
         # Actual detection.
-        A[1] = sess.run(
-          [boxes, scores, classes, num_detections],
-          feed_dict={image_tensor: image_np_expanded})
         output_frame.boxes = sess.run(
           [boxes, scores, classes, num_detections],
           feed_dict={image_tensor: image_np_expanded})
@@ -95,10 +91,6 @@ if __name__ == "__main__":
     cap.set(3, IMAGE_WIDTH)
     cap.set(4, IMAGE_HEIGHT)
     sess = tf.Session(graph=detection_graph)
-
-    A = [0,0]
-    BLACK_FRAME = np.zeros((IMAGE_HEIGHT,IMAGE_WIDTH,3))
-    A[0] = BLACK_FRAME
     output_frame = OutputFrame()
 
     webcam_thread = WebcamThread("Webcam Thread")
