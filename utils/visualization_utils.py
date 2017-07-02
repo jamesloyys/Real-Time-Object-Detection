@@ -157,7 +157,7 @@ def draw_bounding_box_on_image(image,
   draw.line([(left, top), (left, bottom), (right, bottom),
              (right, top), (left, top)], width=thickness, fill=color)
   try:
-    font = ImageFont.truetype('arial.ttf', 24)
+      font = ImageFont.truetype('/Library/Fonts/arial.ttf', 20)
   except IOError:
     font = ImageFont.load_default()
 
@@ -165,6 +165,8 @@ def draw_bounding_box_on_image(image,
   # Reverse list and print from bottom to top.
   for display_str in display_str_list[::-1]:
     text_width, text_height = font.getsize(display_str)
+    # text_width += 20
+    # text_height += 10
     margin = np.ceil(0.05 * text_height)
     draw.rectangle(
         [(left, text_bottom - text_height - 2 * margin), (left + text_width,
