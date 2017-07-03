@@ -7,15 +7,13 @@ from utils import label_map_util
 from utils import visualization_utils as vis_util
 import threading
 
-# What model to download.
 MODEL_NAME = 'ssd_mobilenet_v1_coco_11_06_2017'
-MODEL_FILE = MODEL_NAME + '.tar.gz'
-# DOWNLOAD_BASE = 'http://download.tensorflow.org/models/object_detection/'
 # Path to frozen detection graph. This is the actual model that is used for the object detection.
-PATH_TO_CKPT = MODEL_NAME + '/frozen_inference_graph.pb'
+PATH_TO_CKPT = 'models/' + MODEL_NAME + '/frozen_inference_graph.pb'
 # List of the strings that is used to add correct label for each box.
 CWD_PATH = os.getcwd()
-PATH_TO_LABELS = os.path.join(CWD_PATH, 'TF_Object_Detection','object_detection', 'data', 'mscoco_label_map.pbtxt')
+PATH_TO_LABELS = os.path.join(CWD_PATH,'object_detection', 'data', 'mscoco_label_map.pbtxt')
+print(PATH_TO_LABELS)
 NUM_CLASSES = 90
 IMAGE_WIDTH = 640
 IMAGE_HEIGHT = 480
@@ -24,7 +22,6 @@ class OutputFrame:
     def __init__(self):
         self.frame = np.zeros((IMAGE_HEIGHT,IMAGE_WIDTH,3))
         self.boxes = ()
-
 
 def load_image_into_numpy_array(image):
   (im_width, im_height) = image.size
@@ -88,6 +85,8 @@ if __name__ == "__main__":
     category_index = label_map_util.create_category_index(categories)
 
     cap = cv2.VideoCapture(0)
+    fourcc = cv2.VideoWriter_fourcc('a', 'v', 'c', '1') # note the lower case
+    out = cv2.VideoWriter('output.avi', fourcc, 20.0, (640,480), True)
     cap.set(3, IMAGE_WIDTH)
     cap.set(4, IMAGE_HEIGHT)
     sess = tf.Session(graph=detection_graph)
@@ -113,9 +112,11 @@ if __name__ == "__main__":
               line_thickness=8)
 
         cv2.imshow('frame', to_show)
+        out.write((to_show).astype('u1'))
         if cv2.waitKey(1) & 0xFF == ord('q'):
             done = True
             break
 
     cap.release()
+    out.release()
     cv2.destroyAllWindows()
