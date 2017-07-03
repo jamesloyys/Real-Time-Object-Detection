@@ -1,5 +1,4 @@
-# Real-Time-Object-Detection
-A Low Latency Real-Time Object Detection App using your Webcam. Built using TensorFlow and OpenCV.
+# A Low Latency Real-Time Object Detection App. Built using TensorFlow and OpenCV
 
 ## TLDR
 This project uses a multithreaded approach to create a low latency real-time objection detection app. Built using Tensorflow's Object Detection API and OpenCV.
